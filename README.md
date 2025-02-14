@@ -1,53 +1,80 @@
-# Irys-Daydream-Analytics-System
+# Irys AI Analytics Agent
 
-A robust real-time data analytics and visualization system built on the Daydreams framework with Irys blockchain storage integration. This system combines pattern analysis, data streaming, and interactive visualization capabilities with enterprise-grade error handling and comprehensive testing.
+A sophisticated AI-powered data analytics system built on the Daydreams framework, integrating Groq LLM for intelligent analysis and Irys blockchain for secure data storage. This system combines autonomous pattern analysis, real-time data streaming, and interactive visualization with enterprise-grade error handling and comprehensive testing.
+
+## AI Agent Architecture
+
+### Core AI Capabilities
+- **Autonomous Decision Making**: Leverages Groq LLM for intelligent data analysis
+- **Multi-Expert System**: Specialized modules for different analysis domains
+- **Context-Aware Processing**: Maintains analysis context across data streams
+- **Adaptive Learning**: Adjusts parameters based on historical performance
+
+### Agent Components
+1. **Pattern Analysis Expert**
+   - Time series decomposition
+   - Trend identification
+   - Anomaly detection
+   - Predictive analytics
+
+2. **Financial Analysis Expert**
+   - Market data processing
+   - Risk assessment
+   - Performance metrics
+   - Trading signals
+
+3. **Data Management Expert**
+   - Stream optimization
+   - Storage decisions
+   - Retention policies
+   - Blockchain integration
 
 ## Features
 
-### Core Analytics Engine
-- **Pattern Analysis**: Time series decomposition and trend analysis
-- **Real-Time Processing**: Stream data processing with configurable rates
-- **Blockchain Storage**: Permanent data storage using Irys
-- **Statistical Analysis**: Automated statistical calculations including mean, standard deviation, min/max values
+### Analytics Engine
+- **Pattern Analysis**: Advanced time series analysis with AI insights
+- **Real-Time Processing**: Configurable stream processing (1-100 points/second)
+- **Blockchain Storage**: Permanent data storage on Irys
+- **Statistical Analysis**: Comprehensive statistical calculations
 
 ### Visualization
-- **Real-Time Charts**: Interactive line charts with multiple data streams
-- **Performance Metrics**: Live performance monitoring and statistics
-- **Configurable Display**: Adjustable data rates and retention periods
-- **Export Capabilities**: Data export in CSV format
+- **Real-Time Charts**: Interactive multi-stream visualization
+- **Performance Metrics**: Live monitoring and statistics
+- **Configurable Display**: Adjustable visualization parameters
+- **Export Capabilities**: Data and analysis export
 
 ### Error Handling & Reliability
-- **Retry Mechanisms**: Configurable retry strategies with exponential backoff
-- **Error Boundaries**: React error boundaries for graceful failure handling
-- **Error Reporting**: Centralized error reporting system
-- **Type Safety**: Comprehensive TypeScript type definitions
+- **Retry Mechanisms**: Configurable retry strategies
+- **Error Boundaries**: Graceful failure handling
+- **Error Reporting**: Centralized error tracking
+- **Type Safety**: Comprehensive TypeScript types
 
 ### Testing Infrastructure
-- **Unit Tests**: Component and utility function testing
-- **Integration Tests**: End-to-end system testing
+- **Unit Tests**: Component and function testing
+- **Integration Tests**: End-to-end testing
 - **Performance Benchmarks**: Automated performance testing
-- **Test Coverage**: Minimum 80% code coverage requirement
+- **Test Coverage**: 80% minimum coverage requirement
 
 ## Project Structure
 
 ```
 src/
 ├── agents/
-│   ├── hedge-fund-agent.ts     # Core hedge fund analytics agent
-│   ├── hedge-pattern-agent.ts  # Pattern analysis integration
-│   └── stream-integration.ts   # Stream data management
+│   ├── hedge-fund-agent.ts     # Core analytics agent
+│   ├── hedge-pattern-agent.ts  # Pattern analysis
+│   └── stream-integration.ts   # Stream management
 ├── components/
 │   └── data-visualization/
-│       └── IntegratedDataViz.tsx  # React visualization component
+│       └── IntegratedDataViz.tsx  # Visualization
 ├── utils/
-│   └── error-handling.ts       # Error handling utilities
+│   └── error-handling.ts       # Error utilities
 ├── tests/
-│   ├── setup.ts               # Test environment setup
+│   ├── setup.ts               # Test setup
 │   ├── IntegratedDataViz.test.tsx
 │   ├── StreamIntegration.test.ts
 │   └── performance.bench.ts
 ├── types/
-│   └── index.ts               # TypeScript type definitions
+│   └── index.ts               # Type definitions
 └── docs/
     └── API.md                 # API documentation
 ```
@@ -59,16 +86,18 @@ src/
 npm install
 ```
 
-2. Set up environment variables:
+2. Environment setup:
 ```env
 GROQ_API_KEY=your_groq_api_key
 PRIVATE_KEY=your_blockchain_private_key
 JWT_SECRET=your_jwt_secret
+LLM_MODEL=deepseek-r1-distill-llama-70b
+CONTEXT_WINDOW=1000
 ```
 
 ## Usage
 
-### Initialize the Agent
+### Initialize AI Agent
 
 ```typescript
 import { createStreamEnabledAgent } from './agents/stream-integration';
@@ -79,10 +108,28 @@ const agent = createStreamEnabledAgent({
   jwtSecret: process.env.JWT_SECRET,
 });
 
-await agent.start();
+await agent.start({
+  enabledExperts: ['pattern', 'financial', 'storage'],
+  contextWindow: 1000,
+  analysisDepth: 'deep'
+});
 ```
 
-### Add Visualization Component
+### Create Data Streams
+
+```typescript
+const stream = await agent.run("create-stream", {
+  type: 'financial',
+  name: 'BTC Price Stream',
+  settings: {
+    dataRate: 10,
+    aiAnalysis: true,
+    predictiveModeling: true
+  }
+});
+```
+
+### Add Visualization
 
 ```typescript
 import IntegratedDataViz from './components/data-visualization/IntegratedDataViz';
@@ -110,7 +157,7 @@ try {
   );
 } catch (error) {
   if (error instanceof StreamError) {
-    // Handle stream-specific errors
+    // Handle stream errors
   }
 }
 ```
@@ -120,15 +167,15 @@ try {
 ### Running Tests
 
 ```bash
-# Run all tests
+# All tests
 npm test
 
-# Run specific test suites
+# Specific suites
 npm run test:unit
 npm run test:integration
 npm run test:bench
 
-# Generate coverage report
+# Coverage report
 npm run test:coverage
 ```
 
@@ -141,7 +188,7 @@ npm run type-check
 # Linting
 npm run lint
 
-# Generate documentation
+# Documentation
 npm run docs
 ```
 
@@ -153,49 +200,80 @@ npm run docs
 - TypeScript >=4.5
 - Daydreams Framework
 - Irys SDK
+- Groq SDK
 
-### Performance Considerations
-- Maximum 5 concurrent streams
-- Configurable data retention periods
+### Performance
+- 5 concurrent streams maximum
+- Configurable retention periods
 - Automatic memory management
-- Rate limiting and request validation
+- Rate limiting
 
-### Testing Coverage Requirements
+### Testing Requirements
 - Branches: 80%
 - Functions: 80%
 - Lines: 80%
 - Statements: 80%
 
-## Contributing
+## Configuration
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Ensure tests pass (`npm test`)
-4. Commit your changes (`git commit -m 'Add amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
+### LLM Settings
+```typescript
+{
+  model: 'deepseek-r1-distill-llama-70b',
+  contextWindow: 1000,
+  temperature: 0.7,
+  maxTokens: 2048
+}
+```
+
+### Analysis Parameters
+```typescript
+{
+  analysisDepth: 'deep' | 'medium' | 'shallow',
+  predictiveHorizon: number,
+  confidenceThreshold: number,
+  updateFrequency: number
+}
+```
 
 ## Limitations
 
-- Maximum 5 concurrent data streams
-- Data rate limited to 1-100 points per second
-- Requires Groq API key for LLM functionality
-- Requires Irys private key for blockchain storage
+- Maximum 5 concurrent streams
+- 1-100 points/second data rate
+- Requires Groq API key
+- Requires Irys private key
+
+## Security
+
+- JWT authentication
+- Rate limiting
+- Input validation
+- XSS protection
+- Request validation
+
+## Contributing
+
+1. Fork repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Ensure tests pass (`npm test`)
+4. Commit changes (`git commit -m 'Add amazing feature'`)
+5. Push branch (`git push origin feature/amazing-feature`)
+6. Open Pull Request
 
 ## Support
 
-- Examine test coverage: `npm run test:coverage`
-- View documentation: `npm run docs`
-- Check API documentation: See `src/docs/API.md`
-- Run performance benchmarks: `npm run test:bench`
+- Test coverage: `npm run test:coverage`
+- Documentation: `npm run docs`
+- API docs: See `src/docs/API.md`
+- Performance: `npm run test:bench`
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License - see LICENSE file
 
 ## Acknowledgments
 
-- Built with [Daydreams Framework](https://docs.daydreams.ai)
-- Visualization powered by [Recharts](https://recharts.org)
-- Blockchain storage by [Irys](https://irys.xyz)
-- LLM support via [Groq](https://groq.com)
+- [Daydreams Framework](https://docs.daydreams.ai)
+- [Recharts](https://recharts.org)
+- [Irys](https://irys.xyz)
+- [Groq](https://groq.com)
