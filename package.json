@@ -9,8 +9,6 @@
     "zod": "^3.0.0"
   }
 }
-// Save as: package.json
-
 {
   "scripts": {
     "test": "jest",
