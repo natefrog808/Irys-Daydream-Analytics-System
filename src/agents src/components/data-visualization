@@ -1,0 +1,9 @@
+your-project/
+├── src/
+│   ├── agents/
+│   │   ├── hedge-fund-agent.ts
+│   │   ├── hedge-pattern-agent.ts
+│   │   └── stream-integration.ts
+│   └── components/
+│       └── data-visualization/
+│           └── IntegratedDataViz.tsx
