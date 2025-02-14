@@ -1,6 +1,6 @@
 # Irys-Daydream-Analytics-System
 
-A real-time data analytics and visualization system built on the Daydreams framework with Irys blockchain storage integration. This system combines pattern analysis, data streaming, and interactive visualization capabilities with secure blockchain-based data persistence.
+A robust real-time data analytics and visualization system built on the Daydreams framework with Irys blockchain storage integration. This system combines pattern analysis, data streaming, and interactive visualization capabilities with enterprise-grade error handling and comprehensive testing.
 
 ## Features
 
@@ -16,11 +16,17 @@ A real-time data analytics and visualization system built on the Daydreams frame
 - **Configurable Display**: Adjustable data rates and retention periods
 - **Export Capabilities**: Data export in CSV format
 
-### Security & Performance
-- **Rate Limiting**: Configurable request limits
-- **Input Validation**: Comprehensive data validation using Zod
-- **Performance Monitoring**: Built-in performance tracking
-- **Error Handling**: Robust error management and reporting
+### Error Handling & Reliability
+- **Retry Mechanisms**: Configurable retry strategies with exponential backoff
+- **Error Boundaries**: React error boundaries for graceful failure handling
+- **Error Reporting**: Centralized error reporting system
+- **Type Safety**: Comprehensive TypeScript type definitions
+
+### Testing Infrastructure
+- **Unit Tests**: Component and utility function testing
+- **Integration Tests**: End-to-end system testing
+- **Performance Benchmarks**: Automated performance testing
+- **Test Coverage**: Minimum 80% code coverage requirement
 
 ## Project Structure
 
@@ -30,16 +36,27 @@ src/
 │   ├── hedge-fund-agent.ts     # Core hedge fund analytics agent
 │   ├── hedge-pattern-agent.ts  # Pattern analysis integration
 │   └── stream-integration.ts   # Stream data management
-└── components/
-    └── data-visualization/
-        └── IntegratedDataViz.tsx  # React visualization component
+├── components/
+│   └── data-visualization/
+│       └── IntegratedDataViz.tsx  # React visualization component
+├── utils/
+│   └── error-handling.ts       # Error handling utilities
+├── tests/
+│   ├── setup.ts               # Test environment setup
+│   ├── IntegratedDataViz.test.tsx
+│   ├── StreamIntegration.test.ts
+│   └── performance.bench.ts
+├── types/
+│   └── index.ts               # TypeScript type definitions
+└── docs/
+    └── API.md                 # API documentation
 ```
 
 ## Installation
 
 1. Install dependencies:
 ```bash
-npm install @daydreamsai/core @ai-sdk/groq @irys/upload react recharts lucide-react zod
+npm install
 ```
 
 2. Set up environment variables:
@@ -65,39 +82,68 @@ const agent = createStreamEnabledAgent({
 await agent.start();
 ```
 
-### Add the Visualization Component
+### Add Visualization Component
 
 ```typescript
 import IntegratedDataViz from './components/data-visualization/IntegratedDataViz';
 
 function App() {
-  return (
-    <div>
-      <IntegratedDataViz agent={agent} />
-    </div>
-  );
+  return <IntegratedDataViz agent={agent} />;
 }
 ```
 
-## Component Features
+### Error Handling
 
-### Analytics Agent
-- Pattern detection and analysis
-- Time series decomposition
-- Financial metrics calculation
-- Blockchain data storage via Irys
+```typescript
+import { withRetry, StreamError } from './utils/error-handling';
 
-### Stream Management
-- Real-time data stream processing
-- Configurable data rates (1-100 points/second)
-- Automatic data pruning
-- Performance monitoring
+try {
+  await withRetry(
+    async () => {
+      // Your async operation
+    },
+    {
+      maxAttempts: 3,
+      delayMs: 1000,
+      backoffFactor: 2
+    }
+  );
+} catch (error) {
+  if (error instanceof StreamError) {
+    // Handle stream-specific errors
+  }
+}
+```
 
-### Visualization Interface
-- Up to 5 concurrent data streams
-- Interactive real-time charts
-- Statistical analysis display
-- Data export functionality
+## Development
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test suites
+npm run test:unit
+npm run test:integration
+npm run test:bench
+
+# Generate coverage report
+npm run test:coverage
+```
+
+### Code Quality
+
+```bash
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
+
+# Generate documentation
+npm run docs
+```
 
 ## Technical Details
 
@@ -114,13 +160,20 @@ function App() {
 - Automatic memory management
 - Rate limiting and request validation
 
+### Testing Coverage Requirements
+- Branches: 80%
+- Functions: 80%
+- Lines: 80%
+- Statements: 80%
+
 ## Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Ensure tests pass (`npm test`)
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
 ## Limitations
 
@@ -128,6 +181,13 @@ function App() {
 - Data rate limited to 1-100 points per second
 - Requires Groq API key for LLM functionality
 - Requires Irys private key for blockchain storage
+
+## Support
+
+- Examine test coverage: `npm run test:coverage`
+- View documentation: `npm run docs`
+- Check API documentation: See `src/docs/API.md`
+- Run performance benchmarks: `npm run test:bench`
 
 ## License
 
