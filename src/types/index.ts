@@ -1,44 +1,3 @@
-// Save as: src/types/index.ts
-
-/**
- * Represents a data point in a stream
- * @interface StreamData
- */
-export interface StreamData {
-  /** Unique identifier for the stream */
-  streamId: number;
-  /** Timestamp in milliseconds */
-  timestamp: number;
-  /** Numerical value of the data point */
-  value: number;
-  /** Optional blockchain transaction ID */
-  txId?: string;
-}
-
-/**
- * Configuration for a data stream
- * @interface StreamConfig
- */
-export interface StreamConfig {
-  /** Type of the stream */
-  type: 'financial' | 'analytics' | 'custom';
-  /** Human-readable name */
-  name: string;
-  /** Optional description */
-  description?: string;
-  /** Stream settings */
-  settings: {
-    /** Data points per second (1-100) */
-    dataRate: number;
-    /** Data retention period in seconds */
-    retentionPeriod: number;
-    /** Whether to store data on blockchain */
-    storageEnabled: boolean;
-  };
-}
-
-// Save as: src/docs/API.md
-
 # API Documentation
 
 ## Agents
@@ -67,4 +26,108 @@ const agent = createStreamEnabledAgent({
 
 2. `add-stream-data`
    - Adds data to an existing stream
-   - Parameters: `Stream
+   - Parameters: `StreamData`
+   - Returns: `{ success: boolean, dataPoint: StreamData }`
+
+## Components
+
+### IntegratedDataViz
+
+React component for real-time data visualization.
+
+```typescript
+<IntegratedDataViz agent={streamEnabledAgent} />
+```
+
+#### Props
+- `agent`: Instance of StreamEnabledAgent
+
+#### Features
+- Real-time data streaming (1-100 points/second)
+- Up to 5 concurrent streams
+- Statistical analysis
+- Data export
+
+## Error Handling
+
+### Retry Mechanism
+
+```typescript
+await withRetry(
+  async () => {
+    // Your async operation
+  },
+  {
+    maxAttempts: 3,
+    delayMs: 1000,
+    backoffFactor: 2
+  }
+);
+```
+
+### Error Types
+
+1. `StreamError`
+   - For stream-related operations
+   - Includes error code and metadata
+
+2. `BlockchainError`
+   - For blockchain operations
+   - Includes transaction hash and metadata
+
+## Testing
+
+### Unit Tests
+
+Run unit tests:
+```bash
+npm run test:unit
+```
+
+### Integration Tests
+
+Run integration tests:
+```bash
+npm run test:integration
+```
+
+### Performance Tests
+
+Run performance benchmarks:
+```bash
+npm run test:bench
+```
+
+## Security
+
+### Authentication
+- JWT-based authentication
+- Rate limiting
+- Input validation
+
+### Data Validation
+All inputs are validated using Zod schemas:
+
+```typescript
+const streamConfigSchema = z.object({
+  type: z.enum(['financial', 'analytics', 'custom']),
+  name: z.string(),
+  settings: z.object({
+    dataRate: z.number().min(1).max(100),
+    retentionPeriod: z.number().min(1),
+    storageEnabled: z.boolean()
+  })
+});
+```
+
+## Performance Considerations
+
+1. Data Retention
+   - Configurable retention periods
+   - Automatic data pruning
+   - Memory usage optimization
+
+2. Streaming Performance
+   - Rate limiting
+   - Batch processing
+   - Optimized rendering
