@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <!-- Background -->
+  <rect width="400" height="200" fill="#1a1a1a"/>
+  
+  <!-- Central Nexus -->
+  <circle cx="200" cy="100" r="50" fill="none" stroke="#326CE5" stroke-width="3">
+    <animate attributeName="r" values="50;55;50" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Data Streams -->
+  <g stroke-width="2" fill="none">
+    <!-- Stream 1 -->
+    <path d="M50,50 Q125,75 200,100" stroke="#34A853">
+      <animate attributeName="d" 
+        values="M50,50 Q125,75 200,100;M50,60 Q125,85 200,100;M50,50 Q125,75 200,100" 
+        dur="4s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Stream 2 -->
+    <path d="M50,150 Q125,125 200,100" stroke="#EA4335">
+      <animate attributeName="d" 
+        values="M50,150 Q125,125 200,100;M50,140 Q125,115 200,100;M50,150 Q125,125 200,100" 
+        dur="3s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Stream 3 -->
+    <path d="M350,50 Q275,75 200,100" stroke="#FFA000">
+      <animate attributeName="d" 
+        values="M350,50 Q275,75 200,100;M350,60 Q275,85 200,100;M350,50 Q275,75 200,100" 
+        dur="5s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Stream 4 -->
+    <path d="M350,150 Q275,125 200,100" stroke="#9334E8">
+      <animate attributeName="d" 
+        values="M350,150 Q275,125 200,100;M350,140 Q275,115 200,100;M350,150 Q275,125 200,100" 
+        dur="4.5s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Pulse Effect -->
+  <circle cx="200" cy="100" r="45" fill="#326CE5" opacity="0.3">
+    <animate attributeName="r" values="45;65;45" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0;0.3" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Central Core -->
+  <circle cx="200" cy="100" r="20" fill="#326CE5">
+    <animate attributeName="r" values="20;22;20" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Data Points -->
+  <g fill="#fff">
+    <circle cx="50" cy="50" r="4">
+      <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="50" cy="150" r="4">
+      <animate attributeName="opacity" values="1;0.5;1" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="350" cy="50" r="4">
+      <animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="350" cy="150" r="4">
+      <animate attributeName="opacity" values="1;0.5;1" dur="2.7s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>
