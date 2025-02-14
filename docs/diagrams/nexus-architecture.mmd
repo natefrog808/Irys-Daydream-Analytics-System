@@ -1,0 +1,57 @@
+flowchart TB
+    subgraph Data_Sources ["External Data Sources"]
+        M[Market Data] --> |Real-time Feed| I
+        T[Trading Systems] --> |Transactions| I
+        S[Sensors/IoT] --> |Stream Data| I
+    end
+
+    subgraph Nexus_Core ["NEXUS STREAM AI CORE"]
+        subgraph Ingestion ["Data Ingestion Layer"]
+            I[Input Handler] --> V{Validator}
+            V --> |Valid| Q[Stream Queue]
+            V --> |Invalid| E[Error Handler]
+        end
+
+        subgraph AI_Processing ["AI Processing Engine"]
+            Q --> PA[Pattern Analysis Expert]
+            Q --> FA[Financial Analysis Expert]
+            Q --> DA[Data Management Expert]
+            
+            PA --> |Insights| DM
+            FA --> |Signals| DM
+            DA --> |Optimizations| DM
+            
+            DM[Decision Matrix] --> |Actions| AM[Action Manager]
+        end
+
+        subgraph Memory_System ["Memory System"]
+            AM --> |Store| SM[Short-term Memory]
+            AM --> |Persist| LM[Long-term Memory]
+            SM --> |Archive| LM
+        end
+    end
+
+    subgraph Blockchain_Layer ["Blockchain Integration"]
+        LM --> |Secure Storage| IR[Irys Network]
+        IR --> |Verify| VE[Verification Engine]
+        VE --> |Confirmed| LM
+    end
+
+    subgraph Visualization ["Real-time Visualization"]
+        AM --> |Updates| RT[Real-time Charts]
+        AM --> |Metrics| PM[Performance Monitor]
+        AM --> |Status| SM[System Monitor]
+    end
+
+    classDef default fill:#326CE5,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef source fill:#1A73E8,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef ai fill:#34A853,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef memory fill:#FFA000,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef blockchain fill:#EA4335,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef viz fill:#9334E8,stroke:#fff,stroke-width:2px,color:#fff;
+
+    class M,T,S source;
+    class PA,FA,DA,DM ai;
+    class SM,LM memory;
+    class IR,VE blockchain;
+    class RT,PM viz;
