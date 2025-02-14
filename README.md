@@ -1,6 +1,10 @@
-# Irys AI Analytics Agent
+# NEXUS STREAM AI
 
-A sophisticated AI-powered data analytics system built on the Daydreams framework, integrating Groq LLM for intelligent analysis and Irys blockchain for secure data storage. This system combines autonomous pattern analysis, real-time data streaming, and interactive visualization with enterprise-grade error handling and comprehensive testing.
+*Intelligent Real-time Data Orchestration & Analytics*
+
+![Nexus Stream AI](/assets/nexus-banner.png)
+
+A sophisticated AI-powered data analytics system that bridges real-time data streams with blockchain persistence through intelligent processing. Built on the Daydreams framework, Nexus Stream AI combines Groq LLM for intelligent analysis with Irys blockchain for secure data storage, creating a powerful nexus of streaming data, AI insights, and blockchain reliability.
 
 ## AI Agent Architecture
 
