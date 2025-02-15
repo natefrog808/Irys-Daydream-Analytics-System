@@ -1,0 +1,9 @@
+// Save as: package.json additions
+{
+  "dependencies": {
+    "@tensorflow/tfjs": "latest",
+    "ml-matrix": "latest",
+    "d3": "latest",
+    "highcharts": "latest"
+  }
+}
