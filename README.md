@@ -1,4 +1,4 @@
-# NEXUS STREAM AI
+#                                                                                                 NEXUS STREAM AI
 
 <div align="center">
   <img src="assets/nexus-logo.svg" alt="Nexus Stream AI Logo" width="400" height="200">
