@@ -66,6 +66,10 @@ A sophisticated AI-powered data analytics system that bridges real-time data str
 ```
 nexus-stream-ai/
 ├── src/
+├── agents/
+│   ├── hedge-fund-agent.ts     # Core analytics agent
+│   ├── hedge-pattern-agent.ts  # Pattern analysis
+│   └── stream-integration.ts   # Stream management
 │   ├── core/
 │   │   ├── ai/
 │   │   ├── analysis/
