@@ -64,25 +64,30 @@ A sophisticated AI-powered data analytics system that bridges real-time data str
 ## Project Structure
 
 ```
-src/
-├── agents/
-│   ├── hedge-fund-agent.ts     # Core analytics agent
-│   ├── hedge-pattern-agent.ts  # Pattern analysis
-│   └── stream-integration.ts   # Stream management
-├── components/
-│   └── data-visualization/
-│       └── IntegratedDataViz.tsx  # Visualization
-├── utils/
-│   └── error-handling.ts       # Error utilities
-├── tests/
-│   ├── setup.ts               # Test setup
-│   ├── IntegratedDataViz.test.tsx
-│   ├── StreamIntegration.test.ts
-│   └── performance.bench.ts
-├── types/
-│   └── index.ts               # Type definitions
-└── docs/
-    └── API.md                 # API documentation
+nexus-stream-ai/
+├── src/
+│   ├── core/
+│   │   ├── ai/
+│   │   ├── analysis/
+│   │   ├── predictive/
+│   │   ├── streaming/
+│   │   └── memory/
+│   ├── security/
+│   ├── blockchain/
+│   ├── components/
+│   │   ├── visualization/
+│   │   └── dashboard/
+│   ├── tests/
+│   │   ├── unit/
+│   │   ├── integration/
+│   │   └── performance/
+│   └── docs/
+├── scripts/
+│   ├── setup.sh
+│   └── deploy.sh
+└── docker/
+    ├── Dockerfile
+    └── docker-compose.yml
 ```
 
 ## Installation
