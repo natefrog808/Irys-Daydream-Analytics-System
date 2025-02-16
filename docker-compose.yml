@@ -1,8 +1,262 @@
-version: '3.8'
-services:
-  nexus-stream:
-    build: .
-    environment:
-      - NODE_ENV=production
-    ports:
-      - "3000:3000"
+# Docker Configuration Guide
+
+## Overview
+
+The Docker configuration for Nexus Stream AI provides a complete development and deployment environment with the following features:
+- Multi-stage builds for optimal image size
+- Development and production configurations
+- Orchestrated services with Docker Compose
+- Monitoring and observability setup
+- Volume management for persistence
+- Network isolation and security
+
+## Quick Start
+
+### Development Environment
+```bash
+# Start development environment
+./scripts/docker-dev.sh
+
+# View logs
+docker-compose logs -f
+
+# Stop environment
+docker-compose down
+```
+
+### Production Deployment
+```bash
+# Deploy to production
+./scripts/docker-deploy.sh
+
+# Scale services
+docker service scale nexus-stream_api=3
+
+# View logs
+docker service logs nexus-stream_api
+```
+
+## Configuration Details
+
+### Base Image
+- Node.js 18 Alpine for minimal size
+- Multi-stage build process
+- Development and production variants
+
+### Services
+1. **API Service**
+   - Node.js application
+   - Auto-reload in development
+   - Scaled in production
+
+2. **Database**
+   - TimescaleDB for time series data
+   - Persistent volume storage
+   - Optimized for time series queries
+
+3. **Cache**
+   - Redis for high-speed caching
+   - Persistent storage
+   - Memory optimization
+
+4. **Monitoring**
+   - Prometheus for metrics
+   - Grafana for visualization
+   - Custom dashboards
+
+## Resource Management
+
+### Memory Limits
+```yaml
+deploy:
+  resources:
+    limits:
+      memory: 1G
+    reservations:
+      memory: 512M
+```
+
+### CPU Allocation
+```yaml
+deploy:
+  resources:
+    limits:
+      cpus: '1'
+    reservations:
+      cpus: '0.5'
+```
+
+## Network Configuration
+
+### Service Networks
+```yaml
+networks:
+  nexus-network:
+    driver: overlay
+```
+
+### Port Mapping
+```yaml
+ports:
+  - "3000:3000"  # API
+  - "3001:3001"  # WebSocket
+  - "9090:9090"  # Prometheus
+```
+
+## Volume Management
+
+### Persistent Volumes
+```yaml
+volumes:
+  postgres-data:
+  redis-data:
+  prometheus-data:
+  grafana-data:
+```
+
+### Development Mounts
+```yaml
+volumes:
+  - .:/app
+  - /app/node_modules
+```
+
+## Environment Configurations
+
+### Development
+```yaml
+environment:
+  - NODE_ENV=development
+  - DATABASE_URL=postgresql://dev:dev@postgres:5432/nexus_stream_dev
+```
+
+### Production
+```yaml
+environment:
+  - NODE_ENV=production
+  - DATABASE_URL=postgresql://user:password@postgres:5432/nexus_stream
+```
+
+## Monitoring Setup
+
+### Prometheus Configuration
+```yaml
+scrape_configs:
+  - job_name: 'nexus-stream'
+    static_configs:
+      - targets: ['api:3000']
+```
+
+### Grafana Dashboards
+- System metrics
+- Application metrics
+- Custom panels
+
+## Security Considerations
+
+1. **Image Security**
+   - Use specific versions
+   - Regular updates
+   - Security scanning
+
+2. **Network Security**
+   - Service isolation
+   - Port restrictions
+   - TLS configuration
+
+3. **Access Control**
+   - Volume permissions
+   - Service authentication
+   - Secret management
+
+## Troubleshooting
+
+### Common Issues
+1. **Container Startup**
+   ```bash
+   # Check logs
+   docker-compose logs api
+
+   # Check status
+   docker-compose ps
+   ```
+
+2. **Database Connection**
+   ```bash
+   # Check database logs
+   docker-compose logs postgres
+
+   # Connect to database
+   docker-compose exec postgres psql -U user nexus_stream
+   ```
+
+3. **Resource Issues**
+   ```bash
+   # Check resource usage
+   docker stats
+
+   # Monitor service health
+   docker service ls
+   ```
+
+## Best Practices
+
+1. **Development Workflow**
+   - Use development configuration
+   - Enable hot reloading
+   - Mount source code
+
+2. **Production Deployment**
+   - Use multi-stage builds
+   - Implement health checks
+   - Monitor resource usage
+
+3. **Maintenance**
+   - Regular updates
+   - Backup volumes
+   - Log rotation
+
+## Backup and Recovery
+
+### Database Backup
+```bash
+# Backup
+docker-compose exec postgres pg_dump -U user nexus_stream > backup.sql
+
+# Restore
+cat backup.sql | docker-compose exec -T postgres psql -U user nexus_stream
+```
+
+### Volume Backup
+```bash
+# Create volume backup
+docker run --rm -v nexus-stream_postgres-data:/data -v $(pwd):/backup alpine tar czf /backup/postgres-data.tar.gz /data
+
+# Restore volume
+docker run --rm -v nexus-stream_postgres-data:/data -v $(pwd):/backup alpine tar xzf /backup/postgres-data.tar.gz
+```
+
+## Scaling Guidelines
+
+1. **Service Scaling**
+   ```bash
+   # Scale API service
+   docker service scale nexus-stream_api=5
+
+   # Monitor scaling
+   docker service ps nexus-stream_api
+   ```
+
+2. **Resource Adjustment**
+   ```yaml
+   deploy:
+     resources:
+       limits:
+         cpus: '2'
+         memory: 2G
+   ```
+
+3. **Load Balancing**
+   - Automatic container distribution
+   - Health check-based routing
+   - Rolling updates
