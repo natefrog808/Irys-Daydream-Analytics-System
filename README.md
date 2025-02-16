@@ -4,7 +4,7 @@
   <img src="assets/nexus-logo.svg" alt="Nexus Stream AI Logo" width="400" height="200">
 </div>
 
-*Intelligent Real-time Data Orchestration & Analytics*
+                                                            *Intelligent Real-time Data Orchestration & Analytics*
 
 A sophisticated AI-powered data analytics system that bridges real-time data streams with blockchain persistence through intelligent processing. Built on the Daydreams framework, Nexus Stream AI combines intelligent analysis with the Irys datachain, creating a powerful nexus of streaming data, AI insights, and blockchain reliability.
 
