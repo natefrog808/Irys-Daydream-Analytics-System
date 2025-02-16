@@ -1,9 +1,247 @@
-// Save as: package.json additions
+# Dependency Management Guide
+
+## Overview
+
+This guide covers the dependencies required for Nexus Stream AI, including installation, maintenance, and best practices.
+
+## Core Dependencies
+
+### Framework Dependencies
+- **@daydreamsai/core**: Core framework functionality
+- **@ai-sdk/groq**: LLM integration
+- **@irys/upload**: Blockchain storage
+
+### Frontend Dependencies
+- **react**: UI library
+- **recharts**: Data visualization
+- **lucide-react**: Icons
+
+### Backend Dependencies
+- **express**: Web framework
+- **prisma**: Database ORM
+- **redis**: Caching
+
+## Installation
+
+1. **Fresh Install**
+```bash
+# Install dependencies
+npm install
+
+# Install development dependencies
+npm install --save-dev
+```
+
+2. **Clean Install**
+```bash
+# Remove existing modules
+rm -rf node_modules
+rm package-lock.json
+
+# Fresh install
+npm ci
+```
+
+## Dependency Groups
+
+### Production Dependencies
+
+1. **Core Framework**
+   - @daydreamsai/core
+   - @ai-sdk/groq
+   - @irys/upload
+
+2. **Server**
+   - express
+   - cors
+   - compression
+   - helmet
+
+3. **Database & Cache**
+   - pg
+   - redis
+   - prisma
+
+4. **Security**
+   - jsonwebtoken
+   - bcryptjs
+   - rate-limiter-flexible
+
+### Development Dependencies
+
+1. **TypeScript**
+   - typescript
+   - ts-node
+   - @types/*
+
+2. **Testing**
+   - jest
+   - @testing-library/react
+   - supertest
+
+3. **Linting & Formatting**
+   - eslint
+   - prettier
+   - husky
+
+## Version Management
+
+### Version Locking
+```json
 {
-  "dependencies": {
-    "@tensorflow/tfjs": "latest",
-    "ml-matrix": "latest",
-    "d3": "latest",
-    "highcharts": "latest"
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }
+```
+
+### Dependency Updates
+```bash
+# Check for updates
+npm outdated
+
+# Update dependencies
+npm update
+
+# Update specific package
+npm update @daydreamsai/core
+```
+
+## Security
+
+### Audit
+```bash
+# Run security audit
+npm audit
+
+# Fix security issues
+npm audit fix
+```
+
+### Version Pinning
+```json
+{
+  "dependencies": {
+    "express": "4.18.2",
+    "react": "18.2.0"
+  }
+}
+```
+
+## Performance Optimization
+
+1. **Bundle Size**
+   - Use tree shaking
+   - Import specific modules
+   - Analyze bundle size
+
+2. **Development Performance**
+   - Use pnpm or yarn
+   - Enable caching
+   - Optimize build scripts
+
+## Dependency Scripts
+
+### Development
+```bash
+# Start development
+npm run dev
+
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
+```
+
+### Testing
+```bash
+# Run tests
+npm test
+
+# Test coverage
+npm run test:coverage
+```
+
+### Build
+```bash
+# Production build
+npm run build
+
+# Start production
+npm start
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Peer Dependencies**
+```bash
+# Install peer dependencies
+npm install --legacy-peer-deps
+```
+
+2. **Version Conflicts**
+```bash
+# Clear npm cache
+npm cache clean --force
+
+# Reinstall dependencies
+npm ci
+```
+
+3. **TypeScript Errors**
+```bash
+# Clear TypeScript cache
+rm -rf node_modules/.cache/typescript
+```
+
+## Best Practices
+
+1. **Dependency Management**
+   - Regular updates
+   - Security audits
+   - Version control
+
+2. **Performance**
+   - Bundle optimization
+   - Tree shaking
+   - Code splitting
+
+3. **Security**
+   - Regular audits
+   - Version pinning
+   - Vulnerability scanning
+
+## Optional Features
+
+### APM Integration
+```bash
+# Install APM
+npm install elastic-apm-node --save-optional
+```
+
+### Development Tools
+```bash
+# Install development tools
+npm install ngrok why-is-node-running --save-optional
+```
+
+## Maintenance Schedule
+
+1. **Weekly**
+   - Security audits
+   - Dependency checks
+   - Version updates
+
+2. **Monthly**
+   - Major version reviews
+   - Performance analysis
+   - Bundle size optimization
+
+3. **Quarterly**
+   - Framework updates
+   - Major dependency upgrades
+   - Security review
