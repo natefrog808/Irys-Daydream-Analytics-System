@@ -243,4 +243,217 @@ pub struct GovernanceState {
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct GovernanceConfig
+pub struct GovernanceConfig {
+    pub voting_delay: i64,
+    pub voting_period: i64,
+    pub quorum_percentage: u8,
+    pub proposal_threshold: u64,
+    pub emergency_threshold: u8,
+}
+
+#[account]
+pub struct Proposal {
+    pub proposal_id: u64,
+    pub proposer: Pubkey,
+    pub proposal_type: ProposalType,
+    pub title: String,
+    pub description: String,
+    pub link: String,
+    pub created_at: i64,
+    pub voting_starts_at: i64,
+    pub voting_ends_at: i64,
+    pub executed: bool,
+    pub cancelled: bool,
+    pub yes_votes: u64,
+    pub no_votes: u64,
+    pub veto_votes: u64,
+    pub abstain_votes: u64,
+    pub quorum: u8,
+}
+
+#[account]
+pub struct VoteRecord {
+    pub proposal: Pubkey,
+    pub voter: Pubkey,
+    pub vote: Vote,
+    pub weight: u64,
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq)]
+pub enum ProposalType {
+    Core,        // 75% approval required
+    Technical,   // 66% approval required
+    Operational, // 51% approval required
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq)]
+pub enum Vote {
+    Yes,
+    No,
+    Veto,
+    Abstain,
+}
+
+#[error_code]
+pub enum GovernanceError {
+    #[msg("Invalid voting period")]
+    InvalidVotingPeriod,
+    #[msg("Invalid voting delay")]
+    InvalidVotingDelay,
+    #[msg("Invalid quorum percentage")]
+    InvalidQuorum,
+    #[msg("Insufficient tokens to create proposal")]
+    InsufficientTokens,
+    #[msg("Voting has not started yet")]
+    VotingNotStarted,
+    #[msg("Voting has already ended")]
+    VotingEnded,
+    #[msg("Voting period has not ended yet")]
+    VotingNotEnded,
+    #[msg("Proposal has already been executed")]
+    AlreadyExecuted,
+    #[msg("Proposal has been cancelled")]
+    ProposalCancelled,
+    #[msg("Quorum has not been reached")]
+    QuorumNotReached,
+    #[msg("Proposal did not pass")]
+    ProposalNotPassed,
+    #[msg("Proposal was vetoed")]
+    ProposalVetoed,
+    #[msg("Invalid emergency action")]
+    InvalidEmergencyAction,
+}
+
+// Save as: tests/governance.ts
+import * as anchor from '@project-serum/anchor';
+import { Program } from '@project-serum/anchor';
+import { NexusGovernance } from '../target/types/nexus_governance';
+import { expect } from 'chai';
+
+describe('nexus-governance', () => {
+    const provider = anchor.AnchorProvider.env();
+    anchor.setProvider(provider);
+
+    const program = anchor.workspace.NexusGovernance as Program<NexusGovernance>;
+    let governance: anchor.web3.PublicKey;
+    let proposal: anchor.web3.PublicKey;
+
+    it('Creates governance', async () => {
+        const config = {
+            votingDelay: new anchor.BN(24 * 60 * 60),    // 1 day
+            votingPeriod: new anchor.BN(5 * 24 * 60 * 60), // 5 days
+            quorumPercentage: 10,                        // 10%
+            proposalThreshold: new anchor.BN(100000),    // 100,000 tokens
+            emergencyThreshold: 80,                      // 80%
+        };
+
+        const tx = await program.methods
+            .createGovernance(config)
+            .accounts({
+                governance: governance,
+                authority: provider.wallet.publicKey,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            })
+            .rpc();
+
+        const governanceAccount = await program.account.governanceState.fetch(governance);
+        expect(governanceAccount.config.quorumPercentage).to.equal(config.quorumPercentage);
+    });
+
+    it('Creates proposal', async () => {
+        const proposalType = { core: {} };
+        const title = "Test Proposal";
+        const description = "This is a test proposal";
+        const link = "https://docs.nexus.ai/proposals/1";
+
+        const tx = await program.methods
+            .createProposal(
+                proposalType,
+                title,
+                description,
+                link
+            )
+            .accounts({
+                governance: governance,
+                proposal: proposal,
+                proposer: provider.wallet.publicKey,
+                proposerTokenAccount: proposerTokenAccount,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            })
+            .rpc();
+
+        const proposalAccount = await program.account.proposal.fetch(proposal);
+        expect(proposalAccount.title).to.equal(title);
+    });
+
+    it('Casts vote', async () => {
+        const vote = { yes: {} };
+
+        const tx = await program.methods
+            .castVote(vote)
+            .accounts({
+                governance: governance,
+                proposal: proposal,
+                voteRecord: voteRecord,
+                voter: provider.wallet.publicKey,
+                voterTokenAccount: voterTokenAccount,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            })
+            .rpc();
+
+        const proposalAccount = await program.account.proposal.fetch(proposal);
+        expect(proposalAccount.yesVotes.toNumber()).to.be.above(0);
+    });
+});
+
+// Save as: scripts/deploy-governance.ts
+import * as anchor from '@project-serum/anchor';
+import { Program } from '@project-serum/anchor';
+import { NexusGovernance } from '../target/types/nexus_governance';
+
+async function main() {
+    const provider = anchor.AnchorProvider.env();
+    anchor.setProvider(provider);
+
+    const program = anchor.workspace.NexusGovernance as Program<NexusGovernance>;
+
+    console.log("Deploying Governance...");
+
+    const config = {
+        votingDelay: new anchor.BN(24 * 60 * 60),    // 1 day
+        votingPeriod: new anchor.BN(5 * 24 * 60 * 60), // 5 days
+        quorumPercentage: 10,                        // 10%
+        proposalThreshold: new anchor.BN(100000),    // 100,000 tokens
+        emergencyThreshold: 80,                      // 80%
+    };
+
+    const governance = anchor.web3.Keypair.generate();
+
+    try {
+        const tx = await program.methods
+            .createGovernance(config)
+            .accounts({
+                governance: governance.publicKey,
+                authority: provider.wallet.publicKey,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            })
+            .signers([governance])
+            .rpc();
+
+        console.log("Governance deployed at:", governance.publicKey.toString());
+        console.log("Transaction signature:", tx);
+    } catch (error) {
+        console.error("Deployment failed:", error);
+    }
+}
+
+main().then(
+    () => process.exit(),
+    (err) => {
+        console.error(err);
+        process.exit(-1);
+    }
+);
+    
+
+
